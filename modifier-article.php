@@ -66,16 +66,30 @@
                 move_uploaded_file($image['tmp_name'], 'uploads/' . $nouveauNomFichier);
             }
 
+            //si aucune image n'a été selectionné, et que l'image n'a pas été supprimée
+            //on n'affecte pâs la potentielle image existante 
+            if ($nouveauNomFichier == '' && !$article->imageSupprime) {
 
-            $requete = $connexion->prepare(
-                "UPDATE article SET nom = :nom, description = :description, prix = :prix, image = :image WHERE id = :id"
-            );
+                $requete = $connexion->prepare(
+                    "UPDATE article SET nom = :nom, description = :description, prix = :prix WHERE id = :id"
+                );
 
-            $requete->bindValue('nom', $article->nom);
-            $requete->bindValue('description', $article->description);
-            $requete->bindValue('prix', $article->prix);
-            $requete->bindValue('image', $nouveauNomFichier);
-            $requete->bindValue('id', $idArticle);
+                $requete->bindValue('nom', $article->nom);
+                $requete->bindValue('description', $article->description);
+                $requete->bindValue('prix', $article->prix);
+                $requete->bindValue('id', $idArticle);
+            } else {
+
+                $requete = $connexion->prepare(
+                    "UPDATE article SET nom = :nom, description = :description, prix = :prix, image = :image WHERE id = :id"
+                );
+
+                $requete->bindValue('nom', $article->nom);
+                $requete->bindValue('description', $article->description);
+                $requete->bindValue('prix', $article->prix);
+                $requete->bindValue('image', $nouveauNomFichier);
+                $requete->bindValue('id', $idArticle);
+            }
 
             $requete->execute();
 
