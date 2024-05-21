@@ -2,6 +2,15 @@
 
         include('header-init.php');
 
+        include('extraction-jwt.php');
+
+        if (!$utilisateur->admin) {
+
+            echo '{"message" : "vous n\'etes pas administrateur"}';
+            http_response_code(403);
+            exit;
+        }
+
         try {
 
             // Prend les données brutes de la requête
